@@ -22,14 +22,31 @@ for segment in gpx.tracks[0].segments:
                         'alt' : point.elevation, 'time' : point.time},
                        ignore_index=True)
 
-
-# plot
 start = df.iloc[0]
 finish = df.iloc[-1]
 
+
+# post-processing
+stages = []
+stages.append(df)
+
+def moving_averaging(df, window=10):
+    return df.rolling(window, win_type='hamming').mean()
+
+df = df.set_index('time')
+df = moving_averaging(df)
+stages.append(df)
+
+
+# plot
 print(f"Plot {len(df)} points ...")
-plt.plot(df['lon'], df['lat'])
+for i, df in enumerate(stages):
+    plt.plot(df['lon'], df['lat'], label=f"stage {i}")
+
 plt.plot(start['lon'], start['lat'], marker='o', color='red')
 plt.plot(finish['lon'], finish['lat'], marker='o', color='green')
+
+plt.legend()
+
 print("Press 'q' to quit or close the figure.")
 plt.show()

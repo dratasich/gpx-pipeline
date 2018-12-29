@@ -6,6 +6,7 @@
 import gpxpy
 import pandas as pd
 import matplotlib.pyplot as plt
+from simplification.cutil import simplify_coords
 
 
 # parse GPX
@@ -31,17 +32,24 @@ stages = []
 stages.append(df)
 
 def moving_averaging(df, window=10):
-    return df.rolling(window, win_type='hamming').mean()
+    return df.rolling(window, win_type='hamming').mean().dropna()
+
+def ramer_douglas_peucker(df, epsilon=0.00005):
+    arr = df[['lat', 'lon']].values.copy(order='C')
+    df = pd.DataFrame(simplify_coords(arr, epsilon), columns=['lat', 'lon'])
+    return df
 
 df = df.set_index('time')
 df = moving_averaging(df)
 stages.append(df)
+df = ramer_douglas_peucker(df)
+stages.append(df)
 
 
 # plot
-print(f"Plot {len(df)} points ...")
 for i, df in enumerate(stages):
-    plt.plot(df['lon'], df['lat'], label=f"stage {i}")
+    print(f"Plot {len(df)} points for stage {i} ...")
+    plt.plot(df['lon'], df['lat'], marker='.', label=f"stage {i}")
 
 plt.plot(start['lon'], start['lat'], marker='o', color='red')
 plt.plot(finish['lon'], finish['lat'], marker='o', color='green')

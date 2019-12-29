@@ -21,8 +21,8 @@ data = gpx.tracks[0].segments[0].points
 df = pd.DataFrame(columns=['lon', 'lat', 'alt', 'time'])
 for segment in gpx.tracks[0].segments:
     for point in segment.points:
-        df = df.append({'lon': point.longitude, 'lat' : point.latitude,
-                        'alt' : point.elevation, 'time' : point.time},
+        df = df.append({'lon': point.longitude, 'lat': point.latitude,
+                        'alt': point.elevation, 'time': point.time},
                        ignore_index=True)
 
 start = df.iloc[0]
@@ -33,8 +33,11 @@ finish = df.iloc[-1]
 stages = []
 stages.append(df)
 
+
 def moving_averaging(df, window=10):
-    return df[['lat', 'lon', 'alt']].rolling(window, win_type='hamming').mean().dropna()
+    return df[['lat', 'lon', 'alt']] \
+        .rolling(window, win_type='hamming').mean().dropna()
+
 
 def kalman_filter_add_v(df):
     # calculate v_lat and v_lon for each coordinate
@@ -52,9 +55,10 @@ def kalman_filter_add_v(df):
         vlon = (lon2 - lon1) / dt
         v_lat.append(vlat)
         v_lon.append(vlon)
-    df.loc[:,'v_lon'] = pd.Series(v_lon, index=df.index)
-    df.loc[:,'v_lat'] = pd.Series(v_lat, index=df.index)
+    df.loc[:, 'v_lon'] = pd.Series(v_lon, index=df.index)
+    df.loc[:, 'v_lat'] = pd.Series(v_lat, index=df.index)
     return df
+
 
 def kalman_filter(df):
     # KF parameters
@@ -84,10 +88,12 @@ def kalman_filter(df):
     df = pd.DataFrame(state_mean, columns=['lon', 'lat', 'v_lon', 'v_lat'])
     return df
 
+
 def ramer_douglas_peucker(df, epsilon=0.00005):
     arr = df[['lon', 'lat']].values.copy(order='C')
     df = pd.DataFrame(simplify_coords(arr, epsilon), columns=['lon', 'lat'])
     return df
+
 
 df = moving_averaging(df)
 # df = kalman_filter_add_v(df)

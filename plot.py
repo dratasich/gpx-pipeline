@@ -21,13 +21,20 @@ data = gpx.tracks[0].segments[0].points
 df = pd.DataFrame(columns=["lon", "lat", "alt", "time"])
 for segment in gpx.tracks[0].segments:
     for point in segment.points:
-        df = df.append(
-            {
-                "lon": point.longitude,
-                "lat": point.latitude,
-                "alt": point.elevation,
-                "time": point.time,
-            },
+        df = pd.concat(
+            [
+                df,
+                pd.DataFrame(
+                    [
+                        {
+                            "lon": point.longitude,
+                            "lat": point.latitude,
+                            "alt": point.elevation,
+                            "time": point.time,
+                        }
+                    ]
+                ),
+            ],
             ignore_index=True,
         )
 

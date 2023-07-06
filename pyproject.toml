@@ -13,7 +13,7 @@ pandas = "^1.4.3"
 matplotlib = "^3.5.2"
 simplification = "^0.6.1"
 pykalman = "^0.9.5"
-scipy = "^1.8.1"
+scipy = "^1.10.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"

@@ -6,14 +6,14 @@ authors = ["Denise Ratasich <dratasich@users.noreply.github.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.11"
+python = ">=3.11"
 gpxpy = "^1.5.0"
 numpy = "^1.23.1"
 pandas = "^1.4.3"
-matplotlib = "^3.5.2"
-simplification = "^0.6.1"
+matplotlib = "^3.8.2"
+simplification = "^0.7.10"
 pykalman = "^0.9.5"
-scipy = "^1.8.1"
+scipy = "^1.10.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"

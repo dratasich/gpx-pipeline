@@ -2,5 +2,6 @@ GPX Plot and Post-Processing
 ============================
 
 ```bash
-$ ./plot.py
+$ python reduce.py mygpstrack.gpx > reduced.gpx
+$ python plot.py reduced.gpx
 ```
